@@ -7,3 +7,4 @@ mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true, useUnifiedTopo
     }).catch((err) => {
         console.log("Error de conneccion: ", err);
     });
+module.exports = mongoose;
