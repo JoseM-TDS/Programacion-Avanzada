@@ -41,30 +41,30 @@ export const fetchHabitsThunk = createAsyncThunk('habits/fetchHabits', async (to
     return responseJson;
 })
 
-export const markAsDoneThunk = createAsyncThunk('habits/markAsDone', async ({habitId, token}: markAsDoneThunkParams, {rejectWithValue}) => {
+export const markAsDoneThunk = createAsyncThunk("habit/markAsDone", async ({habitId, token}:markAsDoneThunkParams, { rejectWithValue }) => {
     const response = await fetch(`http://localhost:3001/habits/markasdone/${habitId}`, {
-        method: "POST",
-        headers: {Authorization: "Bearer" + token}
+        method: "PATCH",
+        headers: {Authorization: 'Bearer '+token}
     });
     const responseJson = await response.json();
     if (!response.ok) {
-        return rejectWithValue("Habito no se ha marcado como completado");
-    }else if (responseJson.message.toString() === "Habito se ha restaurado") {
+        return rejectWithValue("Failed to mark habit as done");
+    }else if(responseJson.message.toString() === "Habito se ha reiniciado"){
         return rejectWithValue(responseJson.message);
-    }else {
+    }else{
         return responseJson.message;
     }
 });
 
-export const fetchAddHabitThunk = createAsyncThunk('habits/fetchAddHabit', async ({title, description, token}: addHabbitThunkParams, {rejectWithValue}) => {
-    const response = await fetchAddHabit(title, description, token);
+export const fetchAddHabitThunk = createAsyncThunk("user/fetchAddHabit", async ({token, title, description}: addHabbitThunkParams,  {rejectWithValue}) => {
+    const response = await fetchAddHabit(token, title, description);
     const responseJson = await response.json();
     if (!response.ok) {
-        return rejectWithValue("Error al agregar habito");
-    }else if (responseJson.message.toString() === "Error al crear habito") {
+        throw new Error("Failed to login user");
+    }else if(responseJson.message.toString() === "Error al crear habito"  ){
         return rejectWithValue(responseJson.message);
-    }else {
-        return responseJson.token;
+    }else{
+        return responseJson.token; 
     }
 });
 
@@ -97,5 +97,5 @@ const habitSlice = createSlice({
     }
 });
 
-export const { addHabits } = habitSlice.actions;
+export const { addHabits, addHabit, removeHabit } = habitSlice.actions;
 export default habitSlice.reducer;
