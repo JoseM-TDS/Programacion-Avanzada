@@ -1,7 +1,7 @@
 export const fetchHabits = async (token: string) => {
-    const response = await fetch("https://localhost:3001/habits", {
+    const response = await fetch("http://localhost:3001/habits", {
         headers: {
-            Authorization: 'Bearer' + token
+            Authorization: 'Bearer ' + token
         }
     });
     if(!response.ok) {
@@ -14,7 +14,7 @@ export const fetchAddHabit = async (token: string, title: string, description: s
     const response = await fetch("http://localhost:3001/habits", {
         method: 'POST',
         headers: {
-            Authorization: 'Bearer' + token,
+            Authorization: 'Bearer ' + token,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({

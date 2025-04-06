@@ -24,7 +24,7 @@ export const fetchRegisterUserThunk = createAsyncThunk("user/fetchRegisterUser",
     const responseJson = await response.json();
     if(!response.ok){
         return rejectWithValue("Failed to register user");
-    }else if(responseJson.message.toString() === "Usuario registrado correctamente"){
+    }else if(responseJson.message.toString() === "El usuario se ha registrado correctamente"){
         return responseJson.message;
     }else{
         return rejectWithValue(responseJson.message);
@@ -36,7 +36,7 @@ export const fetchLoginUserThunk = createAsyncThunk("user/fetchLoginUser", async
     const responseJson = await response.json();
     if(!response.ok){
         return rejectWithValue("Failed to login user");
-    }else if(responseJson.message.toString() === "Inicio de session exitoso"){
+    }else if(responseJson.message.toString() === "Inicio de sesion exitoso"){
         return responseJson.token;
     }else{
         return rejectWithValue(responseJson.message);
@@ -53,7 +53,7 @@ const userSlice = createSlice({
     }, extraReducers: (builder) => {
         builder.addCase(fetchRegisterUserThunk.fulfilled, (state, action) => {
             state.status = "success";
-            state.user = null;
+            state.user = action.payload;
             state.error = action.payload as string;
             alert("Usuario registrado correctamente");
         }).addCase(fetchRegisterUserThunk.rejected, (state, action) => {

@@ -2,8 +2,7 @@ var express = require('express');
 var router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const user = require('../modelo/user');
-const user = require('../modelo/user');
+const User = require('../modelo/user');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -16,7 +15,7 @@ router.post('/register', async function(req, res, next){
     const salt =  await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = new user({username, password: hashedPassword});
+    const newUser = new User({username, password: hashedPassword});
     await newUser.save();
     res.status(201).json({ message: "El usuario se ha registrado correctamente" });
   }catch(error) {
@@ -25,11 +24,11 @@ router.post('/register', async function(req, res, next){
   }
 })
 
-router.post('/login', async function(req, res, net){
+router.post('/login', async function(req, res, next){
   try {
     const {username, password} = req.body;
     
-    const user = await user.findOne({username});
+    const user = await User.findOne({username});
     if(!user) return res.status(400).json({error: "Usuario no encontrado"});
     
     const isMatch = await bcrypt.compare(password, user.password);

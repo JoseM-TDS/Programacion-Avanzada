@@ -26,10 +26,10 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/habits', authenticateToken, async(req, res,) => {
+router.get('/habits', authenticateToken, async(req, res) => {
   try{
     let userId = req.user && req.user.userId ? req.user.userId : res.status(500).json({ message: "Error al obtener habits" });
-    const habits = await Habit.find({'userID': new mongoose.Types.ObjectId(userId)});
+    const habits = await Habit.find({'userId': new mongoose.Types.ObjectId(`${userId}`)});
     res.json(habits);
   }catch(err){
     res.status(500).json({ message: 'Error al obtener habitos' })
@@ -40,7 +40,7 @@ router.post('/habits', authenticateToken, async(req, res) => {
   try{
     const {title, description} = req.body;
     let userId = req.user && req.user.userId ? req.user.userId : res.status(500).json({ message: "Error al agregar habito" });
-    userID = new mongoose.Types.ObjectId(userId);
+    userId = new mongoose.Types.ObjectId(`${userId}`);
     const habit = new Habit({title, description, userId});
     await habit.save();
     res.json(habit);
